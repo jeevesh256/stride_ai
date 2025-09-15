@@ -3,13 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../models/user.dart';
 import '../services/user_service.dart';
+import 'settings_screen.dart';
 import 'dashboard_screen.dart';
-import 'sports_screen.dart'; // Import SportsScreen
+import 'sports_screen.dart';
 import 'progress_history_screen.dart';
 import 'badges_screen.dart';
 import 'chat_screen.dart';
-import 'login_screen.dart';
-import 'settings_screen.dart';
+import 'login_screen.dart'; // Add this import
 
 class MainLayout extends StatefulWidget {
   final int? initialTab;
@@ -21,33 +21,14 @@ class MainLayout extends StatefulWidget {
 
 class _MainLayoutState extends State<MainLayout> {
   late int _selectedIndex;
+  late StreamSubscription<User?> _userSubscription;
 
   final List<Widget> _screens = [
     const DashboardScreen(),
-    const SportsScreen(), // Replace TestLibraryScreen with SportsScreen
+    const SportsScreen(),
     const ProgressHistoryScreen(),
     const BadgesScreen(),
   ];
-
-  late StreamSubscription<User?> _userSubscription;
-
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-  }
-
-  void _handleLogout() {
-    UserService().logout();
-    setState(() {});
-  }
-
-  void _handleProfile() {  // renamed from _handleSettings
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => const SettingsScreen()),
-    );
-  }
 
   @override
   void initState() {
@@ -62,6 +43,19 @@ class _MainLayoutState extends State<MainLayout> {
   void dispose() {
     _userSubscription.cancel();
     super.dispose();
+  }
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
+
+  void _handleProfile() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const SettingsScreen()),
+    );
   }
 
   @override
@@ -79,12 +73,11 @@ class _MainLayoutState extends State<MainLayout> {
               width: 40,
               height: 40,
               decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.primaryContainer,
                 borderRadius: BorderRadius.circular(8),
               ),
-              child: Icon(
-                Icons.fitness_center,
-                color: Theme.of(context).colorScheme.primary,
+              child: Image.asset(
+                'assets/images/logo.png',
+                fit: BoxFit.contain,
               ),
             ),
             const SizedBox(width: 12),
@@ -102,7 +95,7 @@ class _MainLayoutState extends State<MainLayout> {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
             child: PopupMenuButton(
-              offset: const Offset(0, 5),  // Changed from Offset(0, 40)
+              offset: const Offset(0, -30),
               position: PopupMenuPosition.under,
               child: Row(
                 children: [
@@ -129,13 +122,13 @@ class _MainLayoutState extends State<MainLayout> {
               itemBuilder: (context) => [
                 PopupMenuItem(
                   child: ListTile(
-                    leading: const Icon(Icons.person), // changed from settings icon
-                    title: const Text('Profile'), // changed from Settings
+                    leading: const Icon(Icons.person),
+                    title: const Text('Profile'),
                     dense: true,
                     visualDensity: VisualDensity.compact,
                     onTap: () {
                       Navigator.pop(context);
-                      _handleProfile(); // renamed from _handleSettings
+                      _handleProfile();
                     },
                   ),
                 ),
@@ -147,7 +140,7 @@ class _MainLayoutState extends State<MainLayout> {
                     visualDensity: VisualDensity.compact,
                     onTap: () {
                       Navigator.pop(context);
-                      _handleLogout();
+                      UserService().logout();
                     },
                   ),
                 ),
@@ -178,8 +171,8 @@ class _MainLayoutState extends State<MainLayout> {
             label: 'Home',
           ),
           NavigationDestination(
-            icon: Icon(Icons.sports), // Updated icon for Sports
-            label: 'Sports', // Updated label for Sports
+            icon: Icon(Icons.sports),
+            label: 'Sports',
           ),
           NavigationDestination(
             icon: Icon(Icons.trending_up),
