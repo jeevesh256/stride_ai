@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:fl_chart/fl_chart.dart';
-import 'test_library_screen.dart';
 import '../services/activity_service.dart';
 import '../models/test_activity.dart';
+import '../services/user_service.dart';
+import 'sports_screen.dart';
+import 'sport_detail_screen.dart';
+import 'main_layout.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
@@ -52,8 +55,79 @@ class _DashboardScreenState extends State<DashboardScreen> {
     }
   }
 
+  Widget _buildPopularSports() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Quick Access',
+          style: GoogleFonts.montserrat(
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        const SizedBox(height: 12),
+        SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: Row(
+            children: [
+              for (final sport in sportCategories.take(4))
+                Padding(
+                  padding: const EdgeInsets.only(right: 12),
+                  child: InkWell(
+                    onTap: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => SportDetailScreen(sport: sport),
+                      ),
+                    ),
+                    child: Card(
+                      child: Container(
+                        width: 100,
+                        padding: const EdgeInsets.all(12),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(sport.icon, size: 32),
+                            const SizedBox(height: 8),
+                            Text(
+                              sport.name,
+                              style: GoogleFonts.montserrat(
+                                fontWeight: FontWeight.w500,
+                                fontSize: 12,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              TextButton(
+                onPressed: () {
+                  Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const MainLayout(initialTab: 1),
+                    ),
+                    (route) => false,
+                  );
+                },
+                child: const Text('View All'),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
+    final user = UserService.currentUser;
+    final firstName = user?.name.split(' ')[0] ?? 'Athlete';
+
     return WillPopScope(
       onWillPop: () async {
         await _loadActivities();
@@ -68,7 +142,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
               children: [
                 // Header
                 Text(
-                  'Welcome Athlete 👋',
+                  'Welcome, $firstName',
                   style: GoogleFonts.montserrat(
                     fontSize: 28,
                     fontWeight: FontWeight.bold,
@@ -85,21 +159,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 const SizedBox(height: 24),
 
                 // Quick action button
-                SizedBox(
-                  width: double.infinity,
-                  child: FilledButton.icon(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const TestLibraryScreen(),
-                        ),
-                      );
-                    },
-                    icon: const Icon(Icons.fitness_center),
-                    label: const Text('Start New Test'),
-                  ),
-                ),
+                _buildPopularSports(),
                 const SizedBox(height: 32),
 
                 // Weekly Summary Card

@@ -12,9 +12,25 @@ class ChatScreen extends StatefulWidget {
 
 class _ChatScreenState extends State<ChatScreen> {
   final TextEditingController _controller = TextEditingController();
-  final List<ChatMessage> _messages = [];
   final ChatService _chatService = ChatService();
   bool _isLoading = false;
+  late List<ChatMessage> _messages;
+
+  @override
+  void initState() {
+    super.initState();
+    _messages = [
+      ChatMessage(
+        text: "Hello! 👋 I'm your AI fitness assistant. I can help you with:\n\n"
+            "• Exercise form and technique\n"
+            "• Training recommendations\n"
+            "• Sports-specific guidance\n"
+            "• Injury prevention tips\n\n"
+            "How can I help you today?",
+        isUser: false,
+      ),
+    ];
+  }
 
   @override
   void dispose() {

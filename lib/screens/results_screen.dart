@@ -49,7 +49,7 @@ class ResultsScreen extends StatelessWidget {
       reps: reps,
       achievement: _getPerformanceLevel(reps),
       time: DateTime.now(),
-      testType: test.type, // Now test.type will work
+      testType: test.category, // Changed from test.type to test.category
     );
     await ActivityService().addActivity(activity);
   }
