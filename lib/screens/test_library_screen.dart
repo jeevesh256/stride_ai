@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'test_execution_screen.dart';
+import 'test_instructions_screen.dart';
 
 class TestLibraryScreen extends StatelessWidget {
   const TestLibraryScreen({super.key});
@@ -79,7 +79,7 @@ class _TestCard extends StatelessWidget {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => TestExecutionScreen(test: test),
+              builder: (context) => TestInstructionsScreen(test: test),
             ),
           );
         },

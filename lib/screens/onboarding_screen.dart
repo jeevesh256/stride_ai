@@ -16,23 +16,23 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   final List<OnboardingPage> _pages = [
     OnboardingPage(
       title: 'Choose Test',
-      description: 'Select from a variety of fitness tests to measure your performance',
+      description: 'Select a fitness test from our library and follow the detailed instructions before starting',
       icon: Icons.fitness_center,
     ),
     OnboardingPage(
-      title: 'Perform',
-      description: 'Follow the instructions and perform the test while we track you',
+      title: 'Proper Setup',
+      description: 'Place your phone on a stable surface, ensure good lighting, and position yourself correctly in frame',
+      icon: Icons.videocam,
+    ),
+    OnboardingPage(
+      title: 'Perform Exercise',
+      description: 'Follow the on-screen guidance and perform the test with proper form while we track you',
       icon: Icons.sports_gymnastics,
     ),
     OnboardingPage(
-      title: 'Get Feedback',
-      description: 'Receive instant feedback and tips to improve your form',
+      title: 'Get Results',
+      description: 'Receive instant feedback, track your progress over time, and earn achievements',
       icon: Icons.analytics,
-    ),
-    OnboardingPage(
-      title: 'Track Progress',
-      description: 'Monitor your improvement over time and earn achievements',
-      icon: Icons.trending_up,
     ),
   ];
 
