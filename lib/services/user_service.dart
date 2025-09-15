@@ -10,6 +10,7 @@ class UserService {
   UserService._internal();
 
   static const String _fileName = 'users.json';
+  static const String _currentUserFile = 'current_user.json';
   static User? currentUser;
   final _userController = StreamController<User?>.broadcast();
   Stream<User?> get userStream => _userController.stream;
@@ -44,6 +45,32 @@ class UserService {
     await file.writeAsString(json.encode(jsonList));
   }
 
+  Future<void> initializeCurrentUser() async {
+    try {
+      final directory = await getApplicationDocumentsDirectory();
+      final file = File('${directory.path}/$_currentUserFile');
+
+      if (await file.exists()) {
+        final contents = await file.readAsString();
+        final userData = json.decode(contents);
+        currentUser = User.fromJson(userData);
+        _userController.add(currentUser);
+      }
+    } catch (e) {
+      print('Error loading current user: $e');
+    }
+  }
+
+  Future<void> _saveCurrentUser(User user) async {
+    try {
+      final directory = await getApplicationDocumentsDirectory();
+      final file = File('${directory.path}/$_currentUserFile');
+      await file.writeAsString(json.encode(user.toJson()));
+    } catch (e) {
+      print('Error saving current user: $e');
+    }
+  }
+
   Future<bool> login(String email, String password) async {
     final users = await _readUsers();
     final user = users.firstWhere(
@@ -52,6 +79,8 @@ class UserService {
     );
     if (user.email.isNotEmpty) {
       currentUser = user;
+      await _saveCurrentUser(user); // Save current user
+      _userController.add(user);
       return true;
     }
     return false;
@@ -78,9 +107,19 @@ class UserService {
     }
   }
 
-  void logout() {
+  void logout() async {
     currentUser = null;
     _userController.add(null);
+    // Delete the current user file
+    try {
+      final directory = await getApplicationDocumentsDirectory();
+      final file = File('${directory.path}/$_currentUserFile');
+      if (await file.exists()) {
+        await file.delete();
+      }
+    } catch (e) {
+      print('Error deleting current user: $e');
+    }
   }
 
   void dispose() {
