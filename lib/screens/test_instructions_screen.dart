@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import '../models/test_info.dart';
 import 'test_library_screen.dart';
 import 'test_execution_screen.dart';
 
@@ -13,7 +14,7 @@ class TestInstructionsScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          test.name,
+          test.title, // Changed from test.name
           style: GoogleFonts.montserrat(),
         ),
         leading: IconButton(
@@ -43,7 +44,7 @@ class TestInstructionsScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 16),
-              _buildInstructionsForTest(test.name),
+              _buildInstructionsForTest(test.title), // Changed from test.name
               const SizedBox(height: 24),
               Text(
                 'Camera Setup Instructions',

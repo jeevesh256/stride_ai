@@ -1,35 +1,46 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import '../models/test_info.dart';
 import 'test_instructions_screen.dart';
 
 class TestLibraryScreen extends StatelessWidget {
   const TestLibraryScreen({super.key});
 
+  static const List<TestInfo> tests = [
+    TestInfo(
+      title: 'Push-ups',
+      type: 'upper_body',
+      description: 'Test your upper body strength',
+      instructions: 'Do as many push-ups as you can with proper form',
+    ),
+    TestInfo(
+      title: 'Sit-ups',
+      type: 'core',
+      description: 'Test your core strength',
+      instructions: 'Do as many sit-ups as you can in 1 minute',
+    ),
+    TestInfo(
+      title: 'Vertical Jump',
+      type: 'lower_body',
+      description: 'Measure your explosive leg power',
+      instructions: 'Jump as high as you can from a standing start',
+    ),
+    TestInfo(
+      title: 'Shuttle Run',
+      type: 'agility',
+      description: 'Test your agility and speed',
+      instructions: 'Run back and forth between two points as quickly as possible',
+    ),
+    TestInfo(
+      title: 'Endurance Run',
+      type: 'cardiovascular',
+      description: '12-minute Cooper test for cardiovascular fitness',
+      instructions: 'Run as far as possible in 12 minutes',
+    ),
+  ];
+
   @override
   Widget build(BuildContext context) {
-    final tests = [
-      TestInfo(
-        name: 'Sit-ups',
-        description: 'Test your core strength with proper form',
-        icon: Icons.fitness_center,
-      ),
-      TestInfo(
-        name: 'Vertical Jump',
-        description: 'Measure your explosive leg power',
-        icon: Icons.height,
-      ),
-      TestInfo(
-        name: 'Shuttle Run',
-        description: 'Test your agility and speed',
-        icon: Icons.directions_run,
-      ),
-      TestInfo(
-        name: 'Endurance Run',
-        description: '12-minute Cooper test for cardiovascular fitness',
-        icon: Icons.timer,
-      ),
-    ];
-
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -52,18 +63,6 @@ class TestLibraryScreen extends StatelessWidget {
       ),
     );
   }
-}
-
-class TestInfo {
-  final String name;
-  final String description;
-  final IconData icon;
-
-  TestInfo({
-    required this.name,
-    required this.description,
-    required this.icon,
-  });
 }
 
 class _TestCard extends StatelessWidget {
@@ -96,7 +95,7 @@ class _TestCard extends StatelessWidget {
               ),
               const SizedBox(height: 12),
               Text(
-                test.name,
+                test.title,
                 style: GoogleFonts.montserrat(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:camera/camera.dart';
-import 'test_library_screen.dart';
+import '../models/test_info.dart';
 import 'results_screen.dart';
 import 'main_layout.dart';
 
@@ -74,11 +74,14 @@ class _TestExecutionScreenState extends State<TestExecutionScreen> {
     });
   }
 
-  void _stopTest() {
+  void _stopTest() async {
     setState(() {
       _isTestRunning = false;
     });
-    // First navigate to results screen
+    
+    if (!mounted) return;
+    
+    // Navigate to results screen
     Navigator.push(
       context,
       MaterialPageRoute(
