@@ -102,7 +102,7 @@ class _MainLayoutState extends State<MainLayout> {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
             child: PopupMenuButton(
-              offset: const Offset(0, 40),
+              offset: const Offset(0, 5),  // Changed from Offset(0, 40)
               position: PopupMenuPosition.under,
               child: Row(
                 children: [

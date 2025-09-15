@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../models/test_info.dart';
+import '../models/test_details.dart';
 import 'test_library_screen.dart';
 import 'test_execution_screen.dart';
 
@@ -8,6 +9,42 @@ class TestInstructionsScreen extends StatelessWidget {
   final TestInfo test;
 
   const TestInstructionsScreen({super.key, required this.test});
+
+  TestDetails _getTestDetails(String testName) {
+    // Example for a sprint test
+    return TestDetails(
+      prerequisites: [
+        'Clear running space of at least 30 meters',
+        'Proper running shoes',
+        'Warm-up completed',
+      ],
+      instructions: [
+        'Set up camera at side angle',
+        'Mark start and finish points',
+        'Begin in athletic stance',
+        'Sprint at maximum effort',
+        'Maintain form through finish',
+      ],
+      commonMistakes: [
+        'Starting too upright',
+        'Not driving arms properly',
+        'Looking down while running',
+        'Decelerating before finish',
+      ],
+      tips: [
+        'Focus on explosive first steps',
+        'Keep your core engaged',
+        'Drive knees high',
+        'Maintain relaxed upper body',
+      ],
+      progressionSteps: [
+        'Master proper form at 50% speed',
+        'Practice acceleration phase',
+        'Work on maintaining top speed',
+        'Add resistance training',
+      ],
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -28,6 +65,31 @@ class TestInstructionsScreen extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              // Add SAI context
+              Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: Theme.of(context).colorScheme.primaryContainer,
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Row(
+                  children: [
+                    Icon(Icons.verified, 
+                        color: Theme.of(context).colorScheme.primary),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: Text(
+                        'Official SAI Assessment Test',
+                        style: GoogleFonts.montserrat(
+                          fontWeight: FontWeight.bold,
+                          color: Theme.of(context).colorScheme.primary,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 16),
               Center(
                 child: Icon(
                   test.icon,
@@ -58,15 +120,8 @@ class TestInstructionsScreen extends StatelessWidget {
               const SizedBox(height: 32),
               Center(
                 child: ElevatedButton.icon(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => TestExecutionScreen(test: test),
-                      ),
-                    );
-                  },
-                  icon: const Icon(Icons.camera),
+                  onPressed: () => _startTest(context),
+                  icon: const Icon(Icons.play_arrow),
                   label: const Text('Start Test'),
                   style: ElevatedButton.styleFrom(
                     padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
@@ -178,5 +233,181 @@ class TestInstructionsScreen extends StatelessWidget {
         style: GoogleFonts.montserrat(fontSize: 16),
       ),
     );
+  }
+
+  Widget _buildSection(String title, List<String> items) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const SizedBox(height: 24),
+        Text(
+          title,
+          style: GoogleFonts.montserrat(
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        const SizedBox(height: 12),
+        ...items.map((item) => Padding(
+          padding: const EdgeInsets.only(bottom: 8),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Icon(Icons.arrow_right, size: 20),
+              const SizedBox(width: 8),
+              Expanded(
+                child: Text(
+                  item,
+                  style: GoogleFonts.montserrat(fontSize: 16),
+                ),
+              ),
+            ],
+          ),
+        )),
+      ],
+    );
+  }
+
+  void _startTest(BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => TestExecutionScreen(test: test),
+      ),
+    );
+  }
+
+  Widget _buildVideoSetupInstructions(BuildContext context) {
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Icon(Icons.videocam, color: Theme.of(context).colorScheme.primary),
+                const SizedBox(width: 8),
+                Text(
+                  'Camera Setup',
+                  style: GoogleFonts.montserrat(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 16),
+            _buildSetupStep(
+              icon: Icons.height,
+              text: 'Place your phone at waist height (about 3-4 feet from ground)',
+            ),
+            _buildSetupStep(
+              icon: Icons.straighten,
+              text: 'Keep 8-10 feet distance from the camera',
+            ),
+            _buildSetupStep(
+              icon: Icons.brightness_5,
+              text: 'Ensure good lighting, avoid backlighting',
+            ),
+            _buildSetupStep(
+              icon: Icons.visibility,
+              text: 'Full body should be visible in frame',
+            ),
+            _buildSetupStep(
+              icon: Icons.smartphone,
+              text: 'Use a stable surface or tripod for the phone',
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildSetupStep({required IconData icon, required String text}) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 12),
+      child: Row(
+        children: [
+          Icon(icon, size: 20),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Text(
+              text,
+              style: GoogleFonts.montserrat(fontSize: 14),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildTestInstructions(BuildContext context) {
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Icon(Icons.assignment, color: Theme.of(context).colorScheme.primary),
+                const SizedBox(width: 8),
+                Text(
+                  'Test Instructions',
+                  style: GoogleFonts.montserrat(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 16),
+            _buildInstructionStep('1. ${_getFirstInstruction()}'),
+            _buildInstructionStep('2. ${_getSecondInstruction()}'),
+            _buildInstructionStep('3. ${_getThirdInstruction()}'),
+          ],
+        ),
+      ),
+    );
+  }
+
+  String _getFirstInstruction() {
+    switch (test.category) {
+      case 'Athletics':
+        return 'Stand sideways to the camera for better form analysis';
+      case 'Basketball':
+        return 'Position yourself at a 45-degree angle to the camera';
+      case 'Football':
+        return 'Face the camera directly for ball control exercises';
+      default:
+        return 'Position yourself according to the on-screen guide';
+    }
+  }
+
+  String _getSecondInstruction() {
+    switch (test.category) {
+      case 'Athletics':
+        return 'Ensure your full running path is visible in frame';
+      case 'Basketball':
+        return 'Keep the basket and your full body in frame';
+      case 'Football':
+        return 'Mark your practice area within camera view';
+      default:
+        return 'Make sure your movements stay in frame';
+    }
+  }
+
+  String _getThirdInstruction() {
+    switch (test.category) {
+      case 'Athletics':
+        return 'Perform the action at your natural speed';
+      case 'Basketball':
+        return 'Complete the motion in a controlled manner';
+      case 'Football':
+        return 'Maintain consistent speed throughout the drill';
+      default:
+        return 'Follow the AI guidance during the test';
+    }
   }
 }

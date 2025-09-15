@@ -6,6 +6,7 @@ import 'dashboard_screen.dart';
 import '../models/test_info.dart';
 import '../models/test_activity.dart';
 import '../services/activity_service.dart';
+import '../services/test_progress_service.dart';
 
 class ResultsScreen extends StatelessWidget {
   final TestInfo test;
@@ -45,13 +46,14 @@ class ResultsScreen extends StatelessWidget {
 
   Future<void> _saveActivity() async {
     final activity = TestActivity(
-      title: test.title, // Now test.title will work
+      title: test.title,
       reps: reps,
       achievement: _getPerformanceLevel(reps),
       time: DateTime.now(),
-      testType: test.category, // Changed from test.type to test.category
+      testType: test.category,
     );
     await ActivityService().addActivity(activity);
+    await TestProgressService().markTestComplete(test.category, test.title);
   }
 
   @override
