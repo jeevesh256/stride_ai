@@ -4,6 +4,7 @@ import 'dashboard_screen.dart';
 import 'test_library_screen.dart';
 import 'progress_history_screen.dart';
 import 'badges_screen.dart';
+import 'chat_screen.dart';
 
 class MainLayout extends StatefulWidget {
   const MainLayout({super.key});
@@ -61,6 +62,18 @@ class _MainLayoutState extends State<MainLayout> {
         ),
       ),
       body: _screens[_selectedIndex],
+      floatingActionButton: Padding(
+        padding: const EdgeInsets.only(bottom: 10.0),
+        child: FloatingActionButton(
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const ChatScreen()),
+            );
+          },
+          child: const Icon(Icons.chat),
+        ),
+      ),
       bottomNavigationBar: NavigationBar(
         selectedIndex: _selectedIndex,
         onDestinationSelected: _onItemTapped,

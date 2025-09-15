@@ -146,23 +146,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                           ),
                         ),
                         const SizedBox(height: 16),
-                        if (_activities.isEmpty)
-                          Center(
-                            child: Text(
-                              'No recent activities',
-                              style: GoogleFonts.montserrat(
-                                color: Colors.grey[600],
-                              ),
-                            ),
-                          )
-                        else
-                          ..._activities.map((activity) => _buildActivityItem(
-                                activity.title,
-                                '${activity.reps} reps',
-                                activity.achievement,
-                                _getTimeAgo(activity.time),
-                                _getColorForAchievement(activity.achievement),
-                              )),
+                        const CollapsibleActivityList(),
                       ],
                     ),
                   ),
@@ -317,67 +301,89 @@ class _DashboardScreenState extends State<DashboardScreen> {
       ],
     );
   }
+}
 
-  Widget _buildActivityItem(
-    String title,
-    String result,
-    String achievement,
-    String time,
-    Color color,
-  ) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 12.0),
-      child: Row(
-        children: [
-          Container(
-            padding: const EdgeInsets.all(8),
-            decoration: BoxDecoration(
-              color: color.withOpacity(0.1),
-              borderRadius: BorderRadius.circular(8),
+class CollapsibleActivityList extends StatefulWidget {
+  const CollapsibleActivityList({super.key});
+
+  @override
+  State<CollapsibleActivityList> createState() => _CollapsibleActivityListState();
+}
+
+class _CollapsibleActivityListState extends State<CollapsibleActivityList> {
+  final ActivityService _activityService = ActivityService();
+  List<TestActivity> _activities = [];
+  bool _showAll = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadActivities();
+  }
+
+  Future<void> _loadActivities() async {
+    final activities = await _activityService.getActivities();
+    setState(() {
+      _activities = activities;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final displayedActivities = _showAll 
+        ? _activities 
+        : _activities.take(5).toList();
+
+    return Column(
+      children: [
+        if (_activities.isEmpty)
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 16.0),
+            child: Text(
+              'No activities yet',
+              style: GoogleFonts.montserrat(color: Colors.grey),
             ),
-            child: Icon(Icons.fitness_center, color: color),
-          ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  title,
-                  style: GoogleFonts.montserrat(
-                    fontWeight: FontWeight.w500,
-                  ),
+          )
+        else ...[
+          ListView.builder(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            itemCount: displayedActivities.length,
+            itemBuilder: (context, index) {
+              final activity = displayedActivities[index];
+              return ListTile(
+                leading: const Icon(Icons.fitness_center),
+                title: Text(
+                  activity.title,
+                  style: GoogleFonts.montserrat(),
                 ),
-                Text(
-                  result,
-                  style: GoogleFonts.montserrat(
-                    color: Colors.grey[600],
-                  ),
+                subtitle: Text(
+                  '${activity.reps} reps - ${activity.achievement}',
+                  style: GoogleFonts.montserrat(),
                 ),
-              ],
-            ),
+                trailing: Text(
+                  '${activity.time.day}/${activity.time.month}/${activity.time.year}',
+                  style: GoogleFonts.montserrat(),
+                ),
+              );
+            },
           ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              Text(
-                achievement,
+          if (_activities.length > 5)
+            FilledButton(
+              onPressed: () {
+                setState(() {
+                  _showAll = !_showAll;
+                });
+              },
+              child: Text(
+                _showAll ? 'Show Less' : 'Show More',
                 style: GoogleFonts.montserrat(
-                  color: color,
-                  fontWeight: FontWeight.w500,
+                  color: Colors.white,
                 ),
               ),
-              Text(
-                time,
-                style: GoogleFonts.montserrat(
-                  color: Colors.grey[600],
-                  fontSize: 12,
-                ),
-              ),
-            ],
-          ),
+            ),
         ],
-      ),
+      ],
     );
   }
 }
