@@ -46,7 +46,15 @@ class _SportDetailScreenState extends State<SportDetailScreen> {
   String _getSportDescription(String sportName) {
     switch (sportName) {
       case 'Athletics':
-        return 'Official SAI athletics assessment program. Complete standardized tests measuring speed, jumping ability, and throwing techniques. Open to all age groups with adjustable performance metrics.';
+        return 'Official SAI Athletics Assessment Program featuring comprehensive tests:\n\n'
+            '• Balance and Stability\n'
+            '• Speed and Acceleration\n'
+            '• Explosive Power\n'
+            '• Agility and Coordination\n'
+            '• Throwing Power\n'
+            '• Core Strength\n'
+            '• Endurance\n\n'
+            'Tests are age-categorized (U14/U16) with specific equipment requirements.';
       case 'Archery':
         return 'SAI archery talent identification program. Assessment includes stance stability, draw consistency, and target accuracy. Specialized categories for para-athletes available.';
       case 'Badminton':

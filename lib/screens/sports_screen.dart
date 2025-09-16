@@ -62,11 +62,15 @@ final sportCategories = [
     name: 'Athletics',
     icon: Icons.directions_run,
     tests: [
-      'Sprint Analysis',
-      'Long Jump Form',
-      'High Jump Technique',
-      'Shot Put Form',
-      'Javelin Throw Analysis',
+      'One-foot Balance Test',
+      '20m/30m Sprint Test',
+      'Standing Long Jump',
+      'Vertical Jump Test',
+      '40m/50m Obstacle Run',
+      '5-Step Bounding',
+      'Chest Pass Test',
+      '1.6km Endurance Run',
+      'Sit-ups Test', // Added sit-ups test
     ],
   ),
   SportCategory(
@@ -156,3 +160,4 @@ class SportCategory {
     required this.tests,
   });
 }
+
